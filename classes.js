@@ -169,8 +169,3 @@ class Building {
     }
 
 }
-
-
-
-
-// moudle.exports = PlacementTile;

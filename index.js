@@ -65,9 +65,9 @@ let enemyCount = 3;
 
 
 
+let hearts = 10
 
 spwanEnemies(enemyCount);
-
 
 function animate() {
    const animationID = requestAnimationFrame(animate)
@@ -76,7 +76,16 @@ function animate() {
     for (let i = enemies.length - 1; i >= 0; i--) {
         const enemy = enemies[i]
         enemy.update()
-
+        if (enemy.position.x > canvas.width) {
+            hearts-=1;
+            enemies.splice(i, 1);
+            document.querySelector('#hearts').innerHTML = hearts;
+            if(hearts === 0) {
+                console.log('game over')
+                window.cancelAnimationFrame(animationID)
+                document.querySelector('#gameOver').style.display = 'flex'
+            }
+        }
 
     }
 
