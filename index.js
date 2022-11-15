@@ -65,7 +65,8 @@ let enemyCount = 3;
 
 
 
-let hearts = 10
+let hearts = 10;
+let coins = 100;
 
 spwanEnemies(enemyCount);
 
@@ -130,6 +131,8 @@ function animate() {
                     })
                     if (enemyIndex > -1) {
                         enemies.splice(enemyIndex, 1)
+                        coins +=25;
+                        document.querySelector('#coins').innerHTML = coins;
                     }
 
                 }
@@ -146,7 +149,9 @@ const mouse = {
 }
 
 canvas.addEventListener('click', (event) => {
-    if (activeTile && !activeTile.isOccupied) {
+    if (activeTile && !activeTile.isOccupied && coins >= 50) {
+        coins -= 50;
+        document.querySelector('#coins').innerHTML = coins;
         buildings.push(new Building({
             position: {
                 x: activeTile.position.x,
