@@ -53,7 +53,7 @@ function spwanEnemies(spwanCount) {
         const xOffset = i * 150
         enemies.push(
             new Enemy({
-                position: { x: waypoints[0].x - xOffset, y: waypoints[0].y }
+                position: { x: waypoints[0].x - xOffset, y: waypoints[0].y }, imageSrc: 'img/orc.png'
             })
         )
     }
@@ -68,20 +68,21 @@ let enemyCount = 3;
 let hearts = 10;
 let coins = 100;
 
+const explosions = [];
 spwanEnemies(enemyCount);
 
 function animate() {
-   const animationID = requestAnimationFrame(animate)
+    const animationID = requestAnimationFrame(animate)
 
     c.drawImage(image, 0, 0)
     for (let i = enemies.length - 1; i >= 0; i--) {
         const enemy = enemies[i]
         enemy.update()
         if (enemy.position.x > canvas.width) {
-            hearts-=1;
+            hearts -= 1;
             enemies.splice(i, 1);
             document.querySelector('#hearts').innerHTML = hearts;
-            if(hearts === 0) {
+            if (hearts === 0) {
                 console.log('game over')
                 window.cancelAnimationFrame(animationID)
                 document.querySelector('#gameOver').style.display = 'flex'
@@ -89,6 +90,19 @@ function animate() {
         }
 
     }
+
+
+    for (let i = explosions.length - 1; i >= 0; i--) {
+        const explosion = explosions[i];
+        explosion.draw()
+        explosion.update()
+
+        if(explosion.frames.current >=explosion.frames.max-1)
+        {
+            explosions.splice(i,1);
+        }
+    }
+
 
     //tracking total amount of enemies
     if (enemies.length === 0) {
@@ -121,7 +135,7 @@ function animate() {
             const xDistance = projectile.enemy.center.x - projectile.position.x
             const yDistance = projectile.enemy.center.y - projectile.position.y
             const distance = Math.hypot(xDistance, yDistance)
-            //this is when tower hits an enmey
+            //this is when tower hits an enemy
             if (distance < projectile.enemy.radius + projectile.radius) {
                 //enemy health and enemy removal
                 projectile.enemy.health -= 20;
@@ -131,11 +145,16 @@ function animate() {
                     })
                     if (enemyIndex > -1) {
                         enemies.splice(enemyIndex, 1)
-                        coins +=25;
+                        coins += 25;
                         document.querySelector('#coins').innerHTML = coins;
                     }
-
                 }
+                explosions.push(new Sprite({
+                    position: { x: projectile.position.x, y: projectile.position.y },
+                    imageSrc: './img/explosion.png',
+                    frames: { max: 4 },
+                    offset: { x: 0, y: 0 }
+                }))
                 building.projectiles.splice(i, 1)
             }
         }
@@ -160,6 +179,9 @@ canvas.addEventListener('click', (event) => {
         })
         )
         activeTile.isOccupied = true;
+        buildings.sort((a, b) => {
+            return a.position.y - b.position.y
+        })
     }
     console.log(buildings);
 })

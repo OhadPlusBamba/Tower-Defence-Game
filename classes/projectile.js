@@ -1,6 +1,6 @@
-class Projectile {
+class Projectile extends Sprite{
     constructor({ position = { x: 0, y: 0 }, enemy }) {
-        this.position = position;
+        super({position,imageSrc:'img/projectile.png'})
         this.velocity = {
             x: 0,
             y: 0
@@ -9,12 +9,7 @@ class Projectile {
         this.enemy = enemy;
         this.radius = 10;
     }
-    draw() {
-        c.beginPath()
-        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2)
-        c.fillStyle = 'orange'
-        c.fill()
-    }
+    
     update() {
         this.draw()
         const angle = Math.atan2(
